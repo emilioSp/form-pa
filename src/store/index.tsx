@@ -18,7 +18,6 @@ const store = createStore(combineReducers({ jsonforms: jsonformsReducer() }), {
 
 
 // Register custom renderer for the Redux tab
-// store.dispatch(Actions.registerRenderer(ratingControlTester, RatingControl));
 store.dispatch(Actions.registerRenderer(markdownControlTester, MarkdownControl));
 
 export default store;
