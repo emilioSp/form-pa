@@ -7,18 +7,21 @@ const $RefParser = require("@apidevtools/json-schema-ref-parser");
 const isYAML = process.env.YAML_SOURCE || true;
 
 let schemaURL: string = "",
-uischemaURL: string = "";
+  uischemaURL: string = "";
 
 if (isYAML) {
-    schemaURL = "schema/schema.yaml";
-    uischemaURL = "schema/uischema.yaml";
+  schemaURL = "schema/schema.yaml";
+  uischemaURL = "schema/uischema.yaml";
 } else {
-    schemaURL = "schema/schema.json";
-    uischemaURL = "schema/uischema.json";
+  schemaURL = "schema/schema.json";
+  uischemaURL = "schema/uischema.json";
 }
 
-schemaURL = new URLSearchParams(window.location.search).get("url_schema") || schemaURL;
-uischemaURL = new URLSearchParams(window.location.search).get("url_uischema") || uischemaURL;
+schemaURL =
+  new URLSearchParams(window.location.search).get("url_schema") || schemaURL;
+uischemaURL =
+  new URLSearchParams(window.location.search).get("url_uischema") ||
+  uischemaURL;
 
 const fetchSchema = async (url: string, dereference: boolean = false) => {
   const text = await (await fetch(url)).text();
@@ -38,7 +41,7 @@ const fetchSchema = async (url: string, dereference: boolean = false) => {
 
 export const loadSchema = (store: Store) => {
   fetchSchema(schemaURL).then((schemaRetrieved) => {
-    console.log("schemaRetrieved", schemaRetrieved);
+    console.debug("schemaRetrieved", schemaRetrieved);
 
     $RefParser.dereference(schemaRetrieved, (err: any, schema: any) => {
       if (err) {
@@ -46,8 +49,8 @@ export const loadSchema = (store: Store) => {
         throw err;
       }
       fetchSchema(uischemaURL, true).then((uischema) => {
-        console.log("uischemaRetrieved", uischema);
-        
+        console.debug("uischemaRetrieved", uischema);
+
         const dataC = uischema._meta?.data || {};
         store.dispatch(Actions.init(dataC, schema, uischema));
       });
